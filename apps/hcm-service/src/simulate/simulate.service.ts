@@ -43,6 +43,7 @@ export class SimulateService {
   async yearReset(resetValue: number) {
     const balances = await this.balanceModel.findAll();
     for (const b of balances) {
+      const previousBalance = b.balanceDays;
       await b.update({
         balanceDays: resetValue,
         version: b.version + 1,
@@ -52,7 +53,7 @@ export class SimulateService {
         employeeId: b.employeeId,
         locationId: b.locationId,
         eventType: 'YEAR_RESET',
-        deltaDays: resetValue - b.balanceDays,
+        deltaDays: resetValue - previousBalance,
         triggeredBy: 'SCHEDULER',
       });
     }

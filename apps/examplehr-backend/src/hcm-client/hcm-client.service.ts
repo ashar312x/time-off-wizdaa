@@ -4,6 +4,7 @@ import {
   ServiceUnavailableException,
   UnprocessableEntityException,
   ConflictException,
+  HttpException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -43,6 +44,7 @@ export class HcmClientService {
         return await fn();
       } catch (err) {
         lastError = err as Error;
+        if (err instanceof HttpException) throw err;
         const axiosErr = err as AxiosError;
         if (axiosErr.response && axiosErr.response.status < 500) {
           throw err;
