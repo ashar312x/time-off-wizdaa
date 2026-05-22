@@ -1,0 +1,21 @@
+{
+  "name": "time-off-system",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/hcm-service",
+    "apps/examplehr-backend",
+    "apps/examplehr-frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "start:hcm": "npm run start:dev -w apps/hcm-service",
+    "start:backend": "npm run start:dev -w apps/examplehr-backend",
+    "start:frontend": "npm run dev -w apps/examplehr-frontend",
+    "seed": "npm run seed -w apps/hcm-service && npm run seed -w apps/examplehr-backend",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "dependencies": {
+    "sqlite3": "^6.0.1"
+  }
+}

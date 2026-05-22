@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  hcm-service:
+    build:
+      context: ./apps/hcm-service
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      PORT: 3001
+      DB_PATH: /data/hcm.sqlite
+      HCM_API_KEY: dev-secret
+      SIMULATE_FAILURE_RATE: 0
+      NODE_ENV: production
+    volumes:
+      - hcm-data:/data
+
+  examplehr-backend:
+    build:
+      context: ./apps/examplehr-backend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      PORT: 3000
+      HCM_BASE_URL: http://hcm-service:3001/hcm
+      HCM_API_KEY: dev-secret
+      JWT_SECRET: change-me-in-production
+      DB_PATH: /data/examplehr.sqlite
+      NODE_ENV: production
+    depends_on:
+      - hcm-service
+    volumes:
+      - examplehr-data:/data
+
+  examplehr-frontend:
+    build:
+      context: ./apps/examplehr-frontend
+      dockerfile: Dockerfile
+    ports:
+      - '5173:80'
+    depends_on:
+      - examplehr-backend
+
+volumes:
+  hcm-data:
+  examplehr-data:
